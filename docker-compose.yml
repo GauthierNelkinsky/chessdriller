@@ -5,13 +5,13 @@ services:
     ports:
       - "3123:3123"
     volumes:
-      - ./prisma:/code/prisma
+      - ./data:/code/data
     restart: unless-stopped
     environment:
       # Node environment
       - NODE_ENV=production
       # SQLite database file path (relative to WORKDIR); persisted via ./prisma volume
-      - DATABASE_URL=file:./prisma/prod.db
+      - DATABASE_URL=file:./data/prod.db
       # Application port (must match mapping above)
       - PORT=3123
       # For local development; set to your public origin (with https://) in production
