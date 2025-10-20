@@ -34,7 +34,7 @@ RUN npm run build
 # Environment defaults (can be overridden at runtime)
 ENV NODE_ENV=production \
     PORT=3123 \
-    DATABASE_URL=file:./prisma/prod.db
+    DATABASE_URL=file:./data/prod.db
 
 EXPOSE 3123
 
