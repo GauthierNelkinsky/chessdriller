@@ -1,0 +1,29 @@
+version: "3.9"
+
+# docker-compose.coolify.yml
+#
+# This variant is tailored for deployment via Coolify.
+# Coolify will inject environment variables you define in its UI.
+# We only mount a data directory for the SQLite file so the baked-in prisma schema is not shadowed.
+
+services:
+  app:
+    container_name: chessdriller
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Coolify maps the public FQDN/port; we still expose internally:
+    ports:
+      - "3123:3123"
+    environment:
+      # Provide safe fallbacks; Coolify UI should still define these explicitly.
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3123}
+      # SQLite database file (relative to WORKDIR /code). Persisted via the mounted volume below.
+      - DATABASE_URL=${DATABASE_URL:-file:./data/prod.db}
+      # Must include scheme in production (e.g. https://chessdriller.example.com).
+      - LICHESS_REDIRECT_ORIGIN=${LICHESS_REDIRECT_ORIGIN:-http://localhost:3123}
+    volumes:
+      # Persist ONLY the mutable SQLite data. Do NOT mount /code/prisma (would hide schema.prisma).
+      - data:/code/data
+    restart: unless-stopped
