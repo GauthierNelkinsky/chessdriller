@@ -8,4 +8,11 @@ services:
       - ./prisma:/code/prisma
     restart: unless-stopped
     environment:
+      # Node environment
       - NODE_ENV=production
+      # SQLite database file path (relative to WORKDIR); persisted via ./prisma volume
+      - DATABASE_URL=file:./prisma/prod.db
+      # Application port (must match mapping above)
+      - PORT=3123
+      # For local development; set to your public origin (with https://) in production
+      - LICHESS_REDIRECT_ORIGIN=http://localhost:3123
